@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Python, Web Developlent">
+    <meta name="author" content="Dogu Ilmak">
+    <title>Exercise Recommender</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <div class="container" id='container' style="text-align: center;">
+
+
+            <br>
+            <h1>Exercise Recommender</h1>
+            <br>
+
+            <!-- Creating form -->
+             <form action="/" method="POST">
+            <select name="bodyPart" id="bodypart" class="form-control" onchange="updateTargetOptions()">
+                <option value="">Select Body Part</option>
+                <option value="waist">Waist</option>
+                <option value="upper legs">Upper Legs</option>
+                <option value="back">Back</option>
+                <option value="lower legs">Lower Legs</option>
+                <option value="chest">Chest</option>
+                <option value="upper arms">Upper Arms</option>
+                <option value="cardio">Cardio</option>
+                <option value="shoulders">Shoulders</option>
+                <option value="lower arms">Lower Arms</option>
+                <option value="neck">Neck</option>
+            </select>
+            <br>
+            <select name="target" id="target" class="form-control">
+                <option value="">Select Target</option>
+                <!-- Target options will be populated based on the selected body part -->
+            </select>
+            <br>
+            <button type="submit" value="submit" class="btn btn-dark btn-lg" id="recommend">Recommend</button>
+        </form>
+
+
+            <!-- Card body -->
+            <div class="card-body">
+
+                <!-- Header -->
+                <h6>{{ lenght }} exercises found.</h6>
+                <hr>
+
+                <!-- Table -->
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">Body Part</th>
+                            <th scope="col">Equipment</th>
+                            <th scope="col">GIF</th>
+                            <th scope="col">name</th>
+                            <th scope="col">Target</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for i in range(0, lenght)%}
+                        <tr>
+                            <!-- For loop logic of jinja template -->
+                            <td>{{recommend.bodyPart.iloc[i]}}</td>
+                            <td>{{recommend.equipment.iloc[i]}}</td>
+                            <td><a href="{{recommend.gifUrl.iloc[i]}}" target="_blank"><img
+                                        src="{{recommend.gifUrl.iloc[i]}}" class="img-fluid img-thumbnail"></a></td>
+                            <td>{{recommend.name.iloc[i]}}</td>
+                            <td>{{recommend.target.iloc[i]}}</td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+
+                <!-- Go top button -->
+                <hr>
+                <a id="clear-exercise" class="btn btn-dark" href="#container">Go to Top</a>
+            </div>
+        </div>
+        </div>
+    </header>
+
+    <!-- jQuery (Bootstrap JS plugins depend on it) -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+        <script>
+            const bodyPartToTargets = {
+                'waist': ['Abs'],
+                'upper legs': ['Quads', 'Glutes', 'Adductors'],
+                'back': ['Lats', 'Spine', 'Upper Back'],
+                'lower legs': ['Calves'],
+                'chest': ['Pectorals'],
+                'upper arms': ['Triceps', 'Biceps'],
+                'cardio': ['Cardiovascular System'],
+                'shoulders': ['Delts'],
+                'lower arms': ['Forearms'],
+                'neck': ['Levator Scapulae']
+            };
+    
+            function updateTargetOptions() {
+                const bodyPart = document.getElementById('bodypart').value;
+                const targetSelect = document.getElementById('target');
+                targetSelect.innerHTML = '<option value="">Select Target</option>'; // Clear previous options
+    
+                if (bodyPart in bodyPartToTargets) {
+                    bodyPartToTargets[bodyPart].forEach(target => {
+                        const option = document.createElement('option');
+                        option.value = target.toLowerCase();
+                        option.textContent = target;
+                        targetSelect.appendChild(option);
+                    });
+                }
+            }
+        </script>
+   
+    
+</body>
+
+</html>
